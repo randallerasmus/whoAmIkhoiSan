@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const FormContainer = styled.div`
   background: white;
@@ -11,111 +12,114 @@ const FormContainer = styled.div`
   margin: 2rem auto;
 
   @media (max-width: 768px) {
-    padding: 1.5rem; /* Adjust padding for tablets */
+    padding: 1.5rem;
   }
 
   @media (max-width: 480px) {
-    width: 95%; /* Make the form take up more width on smaller screens */
-    padding: 1rem; /* Adjust padding for small devices */
+    width: 95%;
+    padding: 1rem;
   }
 `;
 
 const FormTitle = styled.h2`
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   color: #333;
-  font-size: 1.5rem;
+  font-size: 2rem;
 
   @media (max-width: 480px) {
-    font-size: 1.25rem; /* Smaller font size on mobile */
-  }
-`;
-
-const Input = styled.input`
-  width: 92%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
-
-  @media (max-width: 480px) {
-    padding: 0.2rem; /* Reduce padding for small devices */
-    font-size: 0.9rem; /* Adjust font size */
+    font-size: 1.75rem;
   }
 `;
 
 const Button = styled.button`
   width: 100%;
-  padding: 0.75rem;
-  margin-top: 1rem;
+  padding: 1rem;
+  margin-top: 1.5rem;
   border: none;
   border-radius: 5px;
-  background-color: black;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
+  background-color: ${(props) => (props.disabled ? "#ccc" : "black")};
+  color: ${(props) => (props.disabled ? "#666" : "white")};
+  font-size: 1.25rem;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
 
   &:hover {
-    background-color: #388e3c;
+    background-color: ${(props) => (props.disabled ? "#ccc" : "#388e3c")};
   }
 
   @media (max-width: 480px) {
-    padding: 0.5rem; /* Adjust padding for smaller screens */
-    font-size: 0.9rem; /* Adjust font size */
+    padding: 0.75rem;
+    font-size: 1rem;
   }
 `;
 
-const SuccessMessage = styled.p`
-  margin-top: 1rem;
-  color: #4caf50;
-  font-size: 1rem;
+const RadioContainer = styled.div`
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: space-around;
+`;
 
-  @media (max-width: 480px) {
-    font-size: 0.9rem; /* Adjust font size for mobile */
-  }
+const Label = styled.label`
+  font-size: 1.25rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const RadioInput = styled.input`
+  width: 1.5rem;
+  height: 1.5rem;
 `;
 
 export function SignUpForm() {
-    const [formData, setFormData] = useState({ name: "", email: "" });
-    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [selectedOption, setSelectedOption] = useState("");
+    const navigate = useNavigate(); // Hook for navigation
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    const handleOptionChange = (e) => {
+        const value = e.target.value;
+        setSelectedOption(value);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Form Submitted:", formData);
-        setIsSubmitted(true);
+    const handleDashboardNavigation = () => {
+        if (selectedOption === "Yes") {
+            navigate("/dashboard"); // Navigate to the Dashboard route
+        }
+    };
+
+    const handleLogin = () => {
+        navigate("/dashboard"); // Navigate to the Dashboard route
     };
 
     return (
         <FormContainer>
-            <FormTitle>Sign Up for DNA Testing</FormTitle>
-            {!isSubmitted ? (
-                <form onSubmit={handleSubmit}>
-                    <Input
-                        type="text"
-                        name="name"
-                        placeholder="Full Name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
+            <FormTitle>Am I Khoi San?</FormTitle>
+            <RadioContainer>
+                <Label>
+                    <RadioInput
+                        type="radio"
+                        value="Yes"
+                        checked={selectedOption === "Yes"}
+                        onChange={handleOptionChange}
                     />
-                    <Input
-                        type="email"
-                        name="email"
-                        placeholder="Email Address"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
+                    Yes
+                </Label>
+                <Label>
+                    <RadioInput
+                        type="radio"
+                        value="No"
+                        checked={selectedOption === "No"}
+                        onChange={handleOptionChange}
                     />
-                    <Button type="submit">Register</Button>
-                </form>
-            ) : (
-                <SuccessMessage>Thank you for signing up! We'll be in touch soon.</SuccessMessage>
-            )}
+                    No
+                </Label>
+            </RadioContainer>
+            <Button
+                disabled={selectedOption !== "Yes"}
+                onClick={handleDashboardNavigation}
+            >
+                Login
+            </Button>
+
         </FormContainer>
     );
 }
