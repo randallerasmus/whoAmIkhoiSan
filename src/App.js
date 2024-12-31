@@ -9,13 +9,32 @@ function App() {
     return (
         <Router>
             <div className="app-container">
-                <div className="floating-text">
-                    <h1 className="title">KhoiSan Heritage DNA Discovery</h1>
-                    <p className="subtitle">Rediscover Your Roots</p>
-                </div>
+                {/* Only show the heading on non-dashboard routes */}
                 <Routes>
-                    <Route path="/" element={<SignUpForm />} />
-                    <Route path="/login" element={<LoginForm />} />
+                    <Route
+                        path="/"
+                        element={
+                            <>
+                                <div className="floating-text">
+                                    <h1 className="title">KhoiSan Heritage DNA Discovery</h1>
+                                    <p className="subtitle">Rediscover Your Roots</p>
+                                </div>
+                                <SignUpForm />
+                            </>
+                        }
+                    />
+                    <Route
+                        path="/login"
+                        element={
+                            <>
+                                <div className="floating-text">
+                                    <h1 className="title">KhoiSan Heritage DNA Discovery</h1>
+                                    <p className="subtitle">Rediscover Your Roots</p>
+                                </div>
+                                <LoginForm />
+                            </>
+                        }
+                    />
                     <Route path="/dashboard" element={<UserDashboardForm />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
